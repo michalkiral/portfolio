@@ -1,6 +1,6 @@
+import { appRegistry } from "@/registry/apps";
+import AppCard from "@/shared/components/AppCard";
 import React from "react";
-import { appRegistry } from "./registry/apps";
-import AppCard from "./shared/components/AppCard";
 
 const HomeScreen: React.FC = () => {
   return (

@@ -1,6 +1,6 @@
-import { manifest as bangManifest } from "../apps/bang-duel-generator";
-import { manifest as loveManifest } from "../apps/love-you";
-import type { AppManifest } from "./types";
+import { manifest as bangManifest } from "@/apps/bang-duel-generator";
+import { manifest as loveManifest } from "@/apps/love-you";
+import type { AppManifest } from "@/registry/types";
 
 /**
  * Central registry of all apps.

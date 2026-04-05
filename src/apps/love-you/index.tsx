@@ -1,4 +1,4 @@
-import type { AppManifest } from "../../registry/types";
+import type { AppManifest } from "@/registry/types";
 import LoveYouScreen from "./screens/LoveYouScreen";
 
 export const manifest: AppManifest = {

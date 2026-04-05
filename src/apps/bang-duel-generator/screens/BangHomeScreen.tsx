@@ -1,4 +1,4 @@
-import AppLayout from "../../../shared/components/AppLayout";
+import AppLayout from "@/shared/components/AppLayout";
 import logo from "../assets/logo.jpeg";
 import CreateGame from "../components/CreateGame";
 

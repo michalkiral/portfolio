@@ -1,4 +1,4 @@
-import type { AppManifest } from "../../registry/types";
+import type { AppManifest } from "@/registry/types";
 import BangHomeScreen from "./screens/BangHomeScreen";
 import GameGeneratorScreen from "./screens/GameGeneratorScreen";
 

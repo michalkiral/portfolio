@@ -1,6 +1,6 @@
+import type { AppManifest } from "@/registry/types";
 import React from "react";
 import { Link } from "react-router-dom";
-import type { AppManifest } from "../../registry/types";
 
 type AppCardProps = {
   app: AppManifest;

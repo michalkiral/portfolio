@@ -1,4 +1,4 @@
-import AppLayout from "../../../shared/components/AppLayout";
+import AppLayout from "@/shared/components/AppLayout";
 import GameGenerator from "../components/GameGenerator";
 
 const GameGeneratorScreen: React.FC = () => {
