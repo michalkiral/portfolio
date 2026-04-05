@@ -10,6 +10,7 @@ export const manifest: AppManifest = {
   icon: "🤠",
   tags: ["games", "tools"],
   status: "stable",
+  color: "#c9a227",
   routes: [
     { path: "", element: <BangHomeScreen /> },
     { path: "/game-generator", element: <GameGeneratorScreen /> },

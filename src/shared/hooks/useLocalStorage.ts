@@ -1,9 +1,5 @@
 import { useState } from "react";
 
-/**
- * A hook that syncs state to localStorage.
- * Returns [value, setValue, removeValue].
- */
 export function useLocalStorage<T>(key: string, initialValue: T) {
   const [storedValue, setStoredValue] = useState<T>(() => {
     try {
