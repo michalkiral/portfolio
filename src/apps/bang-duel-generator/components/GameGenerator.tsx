@@ -1,7 +1,5 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
-import "./GameGenerator.css";
+import { useLocation, useNavigate } from "react-router-dom";
 
 interface Result {
   game: string;
@@ -15,7 +13,7 @@ interface Result {
   timestamp: string;
 }
 
-const GameGeneratorScreen: React.FC = () => {
+const GameGenerator: React.FC = () => {
   const [player1, setPlayer1] = useState<string>("");
   const [player2, setPlayer2] = useState<string>("");
   const [player3, setPlayer3] = useState<string>("");
@@ -27,11 +25,7 @@ const GameGeneratorScreen: React.FC = () => {
   const [results, setResults] = useState<Result[]>([]);
 
   const location = useLocation();
-  const state = location.state as {
-    player1: string;
-    player2: string;
-    player3?: string;
-  };
+  const state = location.state as { player1: string; player2: string; player3?: string };
   const navigate = useNavigate();
 
   const generateRandomNumbers = useCallback((): string => {
@@ -59,30 +53,24 @@ const GameGeneratorScreen: React.FC = () => {
       "Renegades vs Bandits",
     ];
 
-    const randomGameType =
-      gameTypes[Math.floor(Math.random() * gameTypes.length)];
+    const randomGameType = gameTypes[Math.floor(Math.random() * gameTypes.length)];
+    const newP1 = generateRandomNumbers();
+    const newP2 = generateRandomNumbers();
+    const newP3 = state.player3 ? generateRandomNumbers() : "";
 
-    const newPlayer1Generation = generateRandomNumbers();
-    const newPlayer2Generation = generateRandomNumbers();
-    const newPlayer3Generation = state.player3 ? generateRandomNumbers() : "";
-
-    // Set state
     setGame(randomGameType);
-    setPlayer1Generation(newPlayer1Generation);
-    setPlayer2Generation(newPlayer2Generation);
-    setPlayer3Generation(state.player3 ? newPlayer3Generation : "");
+    setPlayer1Generation(newP1);
+    setPlayer2Generation(newP2);
+    setPlayer3Generation(state.player3 ? newP3 : "");
     setSelectedWinner("");
 
-    // Save to localStorage
-    const generatedData = {
+    saveToLocalStorage("generatedData", {
       game: randomGameType,
-      player1Generation: newPlayer1Generation,
-      player2Generation: newPlayer2Generation,
-      player3Generation: state.player3 ? newPlayer3Generation : "",
-    };
-    saveToLocalStorage("generatedData", generatedData);
+      player1Generation: newP1,
+      player2Generation: newP2,
+      player3Generation: state.player3 ? newP3 : "",
+    });
 
-    // Reset radio buttons
     document.querySelectorAll('input[name="winner"]').forEach((radio) => {
       (radio as HTMLInputElement).checked = false;
     });
@@ -93,7 +81,6 @@ const GameGeneratorScreen: React.FC = () => {
     setPlayer2(state.player2 || "Unknown Player 2");
     setPlayer3(state.player3 || "Unknown Player 3");
 
-    // Load results and generated data from localStorage
     const savedResults = localStorage.getItem("gameResults");
     if (savedResults) {
       setResults(JSON.parse(savedResults));
@@ -107,7 +94,7 @@ const GameGeneratorScreen: React.FC = () => {
       setPlayer2Generation(data.player2Generation);
       setPlayer3Generation(data.player3Generation);
     } else {
-      generateAnotherGame(); // Generate a new game if no data is found in local storage
+      generateAnotherGame();
     }
   }, [state, generateAnotherGame]);
 
@@ -132,15 +119,14 @@ const GameGeneratorScreen: React.FC = () => {
         player3: player3 !== "Unknown Player 3" ? player3 : undefined,
         player1Generation,
         player2Generation,
-        player3Generation:
-          player3 !== "Unknown Player 3" ? player3Generation : undefined,
+        player3Generation: player3 !== "Unknown Player 3" ? player3Generation : undefined,
         winner: selectedWinner,
         timestamp,
       };
-      setResults((prevResults) => {
-        const updatedResult = [...prevResults, newResult];
-        saveToLocalStorage("gameResults", updatedResult);
-        return updatedResult;
+      setResults((prev) => {
+        const updated = [...prev, newResult];
+        saveToLocalStorage("gameResults", updated);
+        return updated;
       });
     }
   };
@@ -164,10 +150,8 @@ const GameGeneratorScreen: React.FC = () => {
     a.click();
     URL.revokeObjectURL(url);
 
-    // Clear local storage
     localStorage.removeItem("gameResults");
     localStorage.removeItem("generatedData");
-
     setResults([]);
     navigate("/");
   };
@@ -178,74 +162,75 @@ const GameGeneratorScreen: React.FC = () => {
     generateAnotherGame();
   };
 
+  const isThreePlayer = player3 !== "Unknown Player 3";
+
+  const btnClass =
+    "rounded-lg border border-white/30 bg-white/10 px-4 py-2 text-sm text-white transition-colors hover:bg-white/20 disabled:cursor-not-allowed disabled:opacity-40";
+
   return (
-    <div className="game-container">
-      <h1>Game</h1>
-      <div className="player-container">
-        <div className="player">
-          <p>Player 1: {player1}</p>
-        </div>
-        <div className="player">
-          <p>Player 2: {player2}</p>
-        </div>
-        {player3 !== "Unknown Player 3" && (
-          <div className="player">
-            <p>Player 3: {player3}</p>
+    <div className="flex w-full max-w-md flex-col gap-6 rounded-xl border border-white/20 bg-gray-800 p-8 shadow-2xl">
+      <h2 className="text-center text-xl font-bold text-white">Current Game</h2>
+
+      <div className="rounded-lg bg-white/5 p-4 text-center">
+        <p className="text-xs uppercase tracking-widest text-white/50">Game Type</p>
+        <p className="mt-1 font-semibold text-white">{game}</p>
+      </div>
+
+      <div className={`grid gap-3 ${isThreePlayer ? "grid-cols-3" : "grid-cols-2"}`}>
+        {[
+          { name: player1, cards: player1Generation },
+          { name: player2, cards: player2Generation },
+          ...(isThreePlayer ? [{ name: player3, cards: player3Generation }] : []),
+        ].map(({ name, cards }) => (
+          <div key={name} className="rounded-lg bg-white/5 p-3 text-center">
+            <p className="text-xs font-semibold text-white/70">{name}</p>
+            <p className="mt-1 text-sm text-white/90">{cards}</p>
           </div>
-        )}
+        ))}
       </div>
-      <div className="generated-game">
-        <p>Game: {game}</p>
-      </div>
-      <div className="generated-characters">
-        <p>Player 1: {player1Generation}</p>
-        <p>Player 2: {player2Generation}</p>
-        {player3 !== "Unknown Player 3" && <p>Player 3: {player3Generation}</p>}
-      </div>
-      <div className="winner">
-        <p>Choose the winner:</p>
-        <label>
-          <input
-            type="radio"
-            name="winner"
-            value="player1"
-            onChange={handleWinnerChange}
-            checked={selectedWinner === "player1"}
-          />
-          {player1}
-        </label>
-        <label>
-          <input
-            type="radio"
-            name="winner"
-            value="player2"
-            onChange={handleWinnerChange}
-            checked={selectedWinner === "player2"}
-          />
-          {player2}
-        </label>
-        {player3 !== "Unknown Player 3" && (
-          <label>
+
+      <div className="flex flex-col gap-2">
+        <p className="text-center text-sm text-white/70">Choose the winner</p>
+        {[
+          { key: "player1", name: player1 },
+          { key: "player2", name: player2 },
+          ...(isThreePlayer ? [{ key: "player3", name: player3 }] : []),
+        ].map(({ key, name }) => (
+          <label
+            key={key}
+            className="flex cursor-pointer items-center gap-3 rounded-lg border border-white/10 px-4 py-2 transition-colors hover:border-white/30 has-[:checked]:border-white/50 has-[:checked]:bg-white/10"
+          >
             <input
               type="radio"
               name="winner"
-              value="player3"
+              value={key}
               onChange={handleWinnerChange}
-              checked={selectedWinner === "player3"}
+              checked={selectedWinner === key}
+              className="accent-white"
             />
-            {player3}
+            <span className="text-white">{name}</span>
           </label>
+        ))}
+        {!selectedWinner && (
+          <p className="text-center text-xs text-red-400">Select a winner to continue</p>
         )}
       </div>
-      {!selectedWinner && <div className="error">Who is the winner?</div>}
-      <div className="generate-another-game">
-        <button onClick={reloadPage} disabled={!selectedWinner}>
-          Generate another game
+
+      <div className="flex gap-3">
+        <button
+          type="button"
+          onClick={reloadPage}
+          disabled={!selectedWinner}
+          className={`flex-1 ${btnClass}`}
+        >
+          Next game
         </button>
-        <button onClick={endSession}>End Session and Save Results</button>
+        <button type="button" onClick={endSession} className={`flex-1 ${btnClass}`}>
+          End session
+        </button>
       </div>
     </div>
   );
 };
 
-export default GameGeneratorScreen;
+export default GameGenerator;
