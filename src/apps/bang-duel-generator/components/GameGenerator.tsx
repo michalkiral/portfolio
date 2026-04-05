@@ -1,6 +1,5 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import "./GameGenerator.css";
 
 interface Result {
@@ -15,7 +14,7 @@ interface Result {
   timestamp: string;
 }
 
-const GameGeneratorScreen: React.FC = () => {
+const GameGenerator: React.FC = () => {
   const [player1, setPlayer1] = useState<string>("");
   const [player2, setPlayer2] = useState<string>("");
   const [player3, setPlayer3] = useState<string>("");
@@ -59,21 +58,18 @@ const GameGeneratorScreen: React.FC = () => {
       "Renegades vs Bandits",
     ];
 
-    const randomGameType =
-      gameTypes[Math.floor(Math.random() * gameTypes.length)];
+    const randomGameType = gameTypes[Math.floor(Math.random() * gameTypes.length)];
 
     const newPlayer1Generation = generateRandomNumbers();
     const newPlayer2Generation = generateRandomNumbers();
     const newPlayer3Generation = state.player3 ? generateRandomNumbers() : "";
 
-    // Set state
     setGame(randomGameType);
     setPlayer1Generation(newPlayer1Generation);
     setPlayer2Generation(newPlayer2Generation);
     setPlayer3Generation(state.player3 ? newPlayer3Generation : "");
     setSelectedWinner("");
 
-    // Save to localStorage
     const generatedData = {
       game: randomGameType,
       player1Generation: newPlayer1Generation,
@@ -82,7 +78,6 @@ const GameGeneratorScreen: React.FC = () => {
     };
     saveToLocalStorage("generatedData", generatedData);
 
-    // Reset radio buttons
     document.querySelectorAll('input[name="winner"]').forEach((radio) => {
       (radio as HTMLInputElement).checked = false;
     });
@@ -93,7 +88,6 @@ const GameGeneratorScreen: React.FC = () => {
     setPlayer2(state.player2 || "Unknown Player 2");
     setPlayer3(state.player3 || "Unknown Player 3");
 
-    // Load results and generated data from localStorage
     const savedResults = localStorage.getItem("gameResults");
     if (savedResults) {
       setResults(JSON.parse(savedResults));
@@ -107,7 +101,7 @@ const GameGeneratorScreen: React.FC = () => {
       setPlayer2Generation(data.player2Generation);
       setPlayer3Generation(data.player3Generation);
     } else {
-      generateAnotherGame(); // Generate a new game if no data is found in local storage
+      generateAnotherGame();
     }
   }, [state, generateAnotherGame]);
 
@@ -132,8 +126,7 @@ const GameGeneratorScreen: React.FC = () => {
         player3: player3 !== "Unknown Player 3" ? player3 : undefined,
         player1Generation,
         player2Generation,
-        player3Generation:
-          player3 !== "Unknown Player 3" ? player3Generation : undefined,
+        player3Generation: player3 !== "Unknown Player 3" ? player3Generation : undefined,
         winner: selectedWinner,
         timestamp,
       };
@@ -164,7 +157,6 @@ const GameGeneratorScreen: React.FC = () => {
     a.click();
     URL.revokeObjectURL(url);
 
-    // Clear local storage
     localStorage.removeItem("gameResults");
     localStorage.removeItem("generatedData");
 
@@ -239,13 +231,15 @@ const GameGeneratorScreen: React.FC = () => {
       </div>
       {!selectedWinner && <div className="error">Who is the winner?</div>}
       <div className="generate-another-game">
-        <button onClick={reloadPage} disabled={!selectedWinner}>
+        <button type="button" onClick={reloadPage} disabled={!selectedWinner}>
           Generate another game
         </button>
-        <button onClick={endSession}>End Session and Save Results</button>
+        <button type="button" onClick={endSession}>
+          End Session and Save Results
+        </button>
       </div>
     </div>
   );
 };
 
-export default GameGeneratorScreen;
+export default GameGenerator;

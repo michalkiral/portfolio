@@ -1,12 +1,12 @@
 @font-face {
-  font-family: 'Western';
-  src: url('../../assets/WEST____.TTF') format('truetype');
+  font-family: "Western";
+  src: url("../assets/WEST____.TTF") format("truetype");
   font-weight: normal;
   font-style: normal;
 }
 
 .rootDiv {
-  background-image: url('../../assets/wood-pattern.png');
+  background-image: url("../assets/wood-pattern.png");
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
@@ -33,17 +33,16 @@
   border-radius: 8px;
   display: flex;
   flex-direction: column;
-  position: relative; /* Changed from absolute for better responsiveness */
+  position: relative;
   justify-content: space-around;
   align-items: center;
   padding: 15px;
   box-sizing: border-box;
 }
 
-/* Responsive styles for .logo */
 .logo {
-  width: 25%; /* Adjust width for responsiveness */
-  max-width: 150px; /* Set a max-width to prevent it from getting too large */
+  width: 25%;
+  max-width: 150px;
   background-color: white;
   display: flex;
   justify-content: center;
@@ -59,15 +58,13 @@
   border-radius: 8px;
 }
 
-/* Responsive styles for .player-container */
 .player-container {
   display: flex;
-  flex-direction: column; /* Stack items vertically on small screens */
+  flex-direction: column;
   align-items: center;
   gap: 20px;
 }
 
-/* Responsive styles for .player */
 .player {
   display: flex;
   flex-direction: column;
@@ -81,7 +78,6 @@
   border: 1px solid black;
 }
 
-/* Responsive button styles */
 button {
   border-radius: 8px;
   border: 1px solid transparent;

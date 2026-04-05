@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import "./CreateGame.css";
 import { useNavigate } from "react-router-dom";
+import "./CreateGame.css";
 
 type CreateGameProps = {
   img: string;
@@ -123,7 +123,9 @@ const CreateGame: React.FC<CreateGameProps> = ({ img }) => {
         {errorMessage && <div className="error">{errorMessage}</div>}
 
         <div className="create-session">
-          <button onClick={createSession}>Create a session</button>
+          <button type="button" onClick={createSession}>
+            Create a session
+          </button>
         </div>
       </div>
     </div>
