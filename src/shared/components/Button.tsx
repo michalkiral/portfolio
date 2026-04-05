@@ -7,13 +7,10 @@ type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
 };
 
 const variantClasses: Record<ButtonVariant, string> = {
-  // Gradient CTA — indigo glow, no border, dark text for contrast on light lavender
   primary:
     "bg-gradient-to-r from-primary to-primary-container text-surface rounded-lg px-4 py-2 font-medium transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50",
-  // Ghost — no fill, faint border, primary text
   secondary:
     "border border-outline-variant/15 text-primary rounded-lg px-4 py-2 font-medium transition-colors hover:bg-surface-container-high disabled:cursor-not-allowed disabled:opacity-50",
-  // Typographic — no box, underline appears on hover only
   tertiary:
     "text-label-md text-on-surface-variant underline decoration-transparent transition-colors hover:text-on-surface hover:decoration-on-surface-variant disabled:cursor-not-allowed disabled:opacity-50",
 };
