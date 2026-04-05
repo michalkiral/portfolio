@@ -4,7 +4,7 @@ import GameGenerator from "../components/GameGenerator";
 const GameGeneratorScreen: React.FC = () => {
   return (
     <AppLayout title="Bang! Duel Generator">
-      <div className="flex flex-1 items-center justify-center">
+      <div className="flex h-full items-center justify-center p-6">
         <GameGenerator />
       </div>
     </AppLayout>
