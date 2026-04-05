@@ -1,3 +1,5 @@
+@import "@fontsource-variable/inter";
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -7,4 +9,15 @@
   src: url("./apps/bang-duel-generator/assets/WEST____.TTF") format("truetype");
   font-weight: normal;
   font-style: normal;
+}
+
+@layer base {
+  html,
+  body,
+  #root {
+    background-color: theme("colors.surface.DEFAULT");
+    color: theme("colors.on-surface");
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
 }

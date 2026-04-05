@@ -40,7 +40,7 @@ export default {
 
       // --- Font families ---
       fontFamily: {
-        sans: ["Inter var", "Inter", "system-ui", "sans-serif"],
+        sans: ["Inter Variable", "Inter", "system-ui", "sans-serif"],
         western: ["Western", "system-ui", "Avenir", "Helvetica", "Arial", "sans-serif"],
       },
 
