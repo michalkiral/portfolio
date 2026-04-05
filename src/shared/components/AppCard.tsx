@@ -7,16 +7,28 @@ type AppCardProps = {
 };
 
 const AppCard: React.FC<AppCardProps> = ({ app }) => {
+  const accent = app.color ?? undefined;
+
   return (
     <Link
       to={app.route}
       className="group relative flex flex-col gap-5 rounded-xl bg-surface-container-low p-6 transition-colors duration-200 hover:bg-surface-container-high"
     >
-      <span className="absolute inset-y-0 left-0 w-0.5 rounded-l-xl bg-primary opacity-0 transition-opacity duration-200 group-hover:opacity-100" />
+      <span
+        style={accent ? { backgroundColor: accent } : undefined}
+        className="absolute inset-y-0 left-0 w-0.5 rounded-l-xl bg-primary opacity-0 transition-opacity duration-200 group-hover:opacity-100"
+      />
 
-      <span className="flex h-11 w-11 items-center justify-center rounded-full bg-surface-container-high text-xl text-primary transition-colors duration-200 group-hover:bg-surface-container-highest">
-        {app.icon}
-      </span>
+      {app.thumbnail ? (
+        <img src={app.thumbnail} alt="" className="h-32 w-full rounded-lg object-cover" />
+      ) : (
+        <span
+          style={accent ? { color: accent } : undefined}
+          className="flex h-11 w-11 items-center justify-center rounded-full bg-surface-container-high text-xl text-primary transition-colors duration-200 group-hover:bg-surface-container-highest"
+        >
+          {app.icon}
+        </span>
+      )}
 
       <div className="flex flex-col gap-1.5">
         <h2 className="text-headline-sm text-on-surface">{app.title}</h2>

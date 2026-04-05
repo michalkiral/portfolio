@@ -9,5 +9,6 @@ export const manifest: AppManifest = {
   icon: "❤️",
   tags: ["fun"],
   status: "stable",
+  color: "#ff6f61",
   routes: [{ path: "", element: <LoveYouScreen /> }],
 };

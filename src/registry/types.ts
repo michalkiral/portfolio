@@ -14,4 +14,6 @@ export interface AppManifest {
   tags: string[];
   status: "stable" | "beta" | "wip";
   routes: AppRoute[];
+  color?: string;
+  thumbnail?: string;
 }
