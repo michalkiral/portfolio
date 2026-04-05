@@ -1,3 +1,4 @@
+import Button from "@/shared/components/Button";
 import React, { useCallback, useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
@@ -164,16 +165,13 @@ const GameGenerator: React.FC = () => {
 
   const isThreePlayer = player3 !== "Unknown Player 3";
 
-  const btnClass =
-    "rounded-lg border border-white/30 bg-white/10 px-4 py-2 text-sm text-white transition-colors hover:bg-white/20 disabled:cursor-not-allowed disabled:opacity-40";
-
   return (
-    <div className="flex w-full max-w-md flex-col gap-6 rounded-xl border border-white/20 bg-gray-800 p-8 shadow-2xl">
-      <h2 className="text-center text-xl font-bold text-white">Current Game</h2>
+    <div className="flex w-full max-w-md flex-col gap-6 rounded-xl bg-surface-container-low p-8">
+      <h2 className="text-center text-xl font-bold text-on-surface">Current Game</h2>
 
-      <div className="rounded-lg bg-white/5 p-4 text-center">
-        <p className="text-xs uppercase tracking-widest text-white/50">Game Type</p>
-        <p className="mt-1 font-semibold text-white">{game}</p>
+      <div className="rounded-lg bg-surface-container p-4 text-center">
+        <p className="text-xs uppercase tracking-widest text-on-surface-variant">Game Type</p>
+        <p className="mt-1 font-semibold text-on-surface">{game}</p>
       </div>
 
       <div className={`grid gap-3 ${isThreePlayer ? "grid-cols-3" : "grid-cols-2"}`}>
@@ -182,15 +180,15 @@ const GameGenerator: React.FC = () => {
           { name: player2, cards: player2Generation },
           ...(isThreePlayer ? [{ name: player3, cards: player3Generation }] : []),
         ].map(({ name, cards }) => (
-          <div key={name} className="rounded-lg bg-white/5 p-3 text-center">
-            <p className="text-xs font-semibold text-white/70">{name}</p>
-            <p className="mt-1 text-sm text-white/90">{cards}</p>
+          <div key={name} className="rounded-lg bg-surface-container p-3 text-center">
+            <p className="text-xs font-semibold text-on-surface-variant">{name}</p>
+            <p className="mt-1 text-sm text-on-surface">{cards}</p>
           </div>
         ))}
       </div>
 
       <div className="flex flex-col gap-2">
-        <p className="text-center text-sm text-white/70">Choose the winner</p>
+        <p className="text-center text-sm text-on-surface-variant">Choose the winner</p>
         {[
           { key: "player1", name: player1 },
           { key: "player2", name: player2 },
@@ -198,7 +196,7 @@ const GameGenerator: React.FC = () => {
         ].map(({ key, name }) => (
           <label
             key={key}
-            className="flex cursor-pointer items-center gap-3 rounded-lg border border-white/10 px-4 py-2 transition-colors hover:border-white/30 has-[:checked]:border-white/50 has-[:checked]:bg-white/10"
+            className="flex cursor-pointer items-center gap-3 rounded-lg border border-outline-variant/15 px-4 py-2 transition-colors hover:bg-surface-container-high has-[:checked]:border-primary/50 has-[:checked]:bg-surface-container-high"
           >
             <input
               type="radio"
@@ -206,9 +204,9 @@ const GameGenerator: React.FC = () => {
               value={key}
               onChange={handleWinnerChange}
               checked={selectedWinner === key}
-              className="accent-white"
+              className="accent-primary"
             />
-            <span className="text-white">{name}</span>
+            <span className="text-on-surface">{name}</span>
           </label>
         ))}
         {!selectedWinner && (
@@ -217,17 +215,17 @@ const GameGenerator: React.FC = () => {
       </div>
 
       <div className="flex gap-3">
-        <button
-          type="button"
+        <Button
+          variant="secondary"
           onClick={reloadPage}
           disabled={!selectedWinner}
-          className={`flex-1 ${btnClass}`}
+          className="flex-1"
         >
           Next game
-        </button>
-        <button type="button" onClick={endSession} className={`flex-1 ${btnClass}`}>
+        </Button>
+        <Button variant="secondary" onClick={endSession} className="flex-1">
           End session
-        </button>
+        </Button>
       </div>
     </div>
   );
