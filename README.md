@@ -1,50 +1,125 @@
-# React + TypeScript + Vite
+# Portfolio
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A collection of interactive mini-apps built with React, TypeScript, and Vite — deployed to GitHub Pages.
 
-Currently, two official plugins are available:
+Live: https://snowskii.github.io/portfolio
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+---
 
-## Expanding the ESLint configuration
+## Tech Stack
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+| Layer | Tool |
+|---|---|
+| Framework | React 18 + TypeScript |
+| Build | Vite + SWC |
+| Styling | Tailwind CSS |
+| Routing | React Router v6 (HashRouter) |
+| Linting & Formatting | Biome |
+| Deployment | GitHub Pages |
 
-- Configure the top-level `parserOptions` property like this:
+---
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+## Development
+
+```bash
+npm install
+npm run dev
 ```
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+The dev server starts at `http://localhost:5173`.
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
+---
 
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
+## Available Scripts
+
+| Script | What it does |
+|---|---|
+| `npm run dev` | Start local dev server with HMR |
+| `npm run build` | Type-check + production build into `dist/` |
+| `npm run preview` | Locally preview the production build |
+| `npm run lint` | Run Biome — checks linting and formatting |
+| `npm run format` | Run Biome formatter and auto-fix files |
+| `npm run deploy` | Build and deploy to GitHub Pages |
+
+---
+
+## Linting & Formatting (Biome)
+
+This project uses [Biome](https://biomejs.dev/) for both linting and formatting. It replaces ESLint and Prettier in a single tool.
+
+### Check everything (lint + format)
+
+```bash
+npm run lint
 ```
+
+This runs `biome check .` which reports both lint violations and formatting issues without modifying files. The CI pipeline runs this on every push and pull request.
+
+### Auto-format files
+
+```bash
+npm run format
+```
+
+This runs `biome format --write .` and rewrites files in place to match the style rules.
+
+### Auto-fix lint issues
+
+```bash
+npx biome check --write .
+```
+
+This applies safe lint fixes and formats at the same time.
+
+### Configuration
+
+Biome is configured in [`biome.json`](./biome.json). Key settings:
+
+- Indent: 2 spaces
+- Line width: 100 characters
+- Quotes: double
+- Linting: enabled with recommended rules for correctness, style, suspicious patterns, accessibility, and performance
+
+### IDE Integration
+
+Install the [Biome VS Code extension](https://marketplace.visualstudio.com/items?itemName=biomejs.biome) to get inline lint errors and format-on-save.
+
+Add this to your `.vscode/settings.json`:
+
+```json
+{
+  "editor.defaultFormatter": "biomejs.biome",
+  "editor.formatOnSave": true,
+  "editor.codeActionsOnSave": {
+    "source.organizeImports.biome": "explicit"
+  }
+}
+```
+
+---
+
+## Deployment
+
+Deployments to GitHub Pages are manual:
+
+```bash
+npm run deploy
+```
+
+This builds the project and pushes the `dist/` folder to the `gh-pages` branch. The live site updates within a minute.
+
+The CI pipeline (`.github/workflows/build.yml`) runs lint + build checks on every push to `main` and on all pull requests, but does **not** auto-deploy.
+
+---
+
+## Project Structure
+
+```
+src/
+├── applications/       # Each mini-app (self-contained)
+├── screens/            # Top-level page components
+├── main.tsx            # Router and app entry point
+└── index.css           # Tailwind directives
+```
+
+See [`claude_context.md`](./claude_context.md) for the full architecture plan and roadmap.
