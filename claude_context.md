@@ -236,3 +236,81 @@ These are categorized by complexity. Each would fit cleanly into the registry pa
 3. **`shared/` is for truly shared code only.** Do not put app-specific logic in `shared/`.
 4. **No new CSS files.** Use Tailwind. The only exception is app-specific animations that Tailwind cannot express.
 5. **No new state management library** until a concrete use case requires it. `useState` + `useLocalStorage` hook is enough for the current and near-future apps.
+
+# 8. Design System Strategy: The Obsidian Gallery
+
+## 1. Overview & Creative North Star
+**Creative North Star: The Obsidian Gallery**
+
+This design system is built to transform a standard dashboard into a high-end editorial experience. We are moving away from the "SaaS-utility" look toward a "Curated Gallery" aesthetic. The goal is to treat every piece of data and every navigation link as a piece of art within a dark, cinematic space. 
+
+By leveraging **intentional asymmetry**, we break the rigid 12-column grid. Large `display` typography should feel like a magazine header, while functional elements are tucked away into subtle glass containers. We rely on breathing room (whitespace) and tonal depth rather than structural lines to guide the eye.
+
+## 2. Colors & Tonal Depth
+The palette is rooted in a deep slate (`#0b1326`) with a vibrant, electric indigo (`#c0c1ff`) acting as the "source of light" within the interface.
+
+### The "No-Line" Rule
+Standard UI relies on 1px borders to separate content. In this system, **solid borders are prohibited for sectioning.** Boundaries must be defined through:
+- **Background Shifts:** A `surface-container-low` section sitting directly on a `surface` background.
+- **Negative Space:** Using the spacing scale to create distinct visual groupings.
+- **Soft Tonal Transitions:** Using subtle gradients to suggest a change in context.
+
+### Surface Hierarchy & Nesting
+Treat the UI as a series of physical layers. Use the surface tiers to create "nested" depth:
+1.  **Base Layer:** `surface` (`#0b1326`) – The infinite floor.
+2.  **Structural Containers:** `surface-container-low` (`#131b2e`) – For large layout blocks.
+3.  **Active Elements:** `surface-container-high` (`#222a3d`) – For cards or modals that need to feel "closer" to the user.
+
+### The Glass & Gradient Rule
+To achieve the "high-end developer portfolio" feel, navigation and floating panels must utilize **Glassmorphism**. 
+- **Recipe:** Use `surface-container` colors at 60% opacity with a `20px` to `40px` backdrop-blur. 
+- **Signature Glow:** Apply a subtle linear gradient to Primary CTAs (from `primary` to `primary-container`) to provide a "soulful" luminosity that flat colors lack.
+
+## 3. Typography: Editorial Authority
+We use **Inter** as a precision tool. The hierarchy is designed to create a sense of scale and importance.
+
+*   **Display & Headlines:** Use `display-lg` and `headline-lg` to ground the page. These should be tracked slightly tighter (-0.02em) to feel premium and intentional.
+*   **The Power of Labels:** Use `label-md` and `label-sm` in all-caps with increased letter spacing (+0.05em) for category tags or metadata. This "editorial" treatment distinguishes functional text from content.
+*   **Body Text:** `body-md` is the workhorse. Ensure it uses `on-surface-variant` (`#c7c4d7`) for secondary info to maintain a sophisticated low-contrast look that reduces eye strain.
+
+## 4. Elevation & Depth
+In this design system, depth is a feeling, not a drop-shadow effect.
+
+*   **Tonal Layering:** Achievement of depth is primary through "stacking." A `surface-container-lowest` card placed on a `surface-container-low` section creates a natural "recessed" look without a single shadow.
+*   **Ambient Shadows:** When an element must float (e.g., a dropdown), use an extra-diffused shadow. 
+    *   *Parameters:* Blur: 32px, Spread: -4px, Opacity: 8%. 
+    *   *Color:* Use a tinted shadow based on `background` rather than pure black to keep the dark mode feeling "airy."
+*   **The Ghost Border Fallback:** If accessibility requires a container edge, use a "Ghost Border." Apply the `outline-variant` token at **15% opacity**. This provides a hint of structure without cluttering the visual field.
+
+## 5. Components
+
+### Navigation Tree (Glassmorphism)
+The sidebar is the system's centerpiece. It should use a semi-transparent `surface-container` background with a heavy backdrop blur. Hover states for nav items should not use a background fill; instead, use a `primary` "light bar" (2px wide) on the left edge and a shift in text color to `on-primary-fixed`.
+
+### Buttons
+*   **Primary:** A gradient from `primary` to `primary-container`. `lg` corner radius (`0.5rem`). No border.
+*   **Secondary:** No fill. A "Ghost Border" (15% `outline-variant`). Text in `primary`.
+*   **Tertiary:** Purely typographic. Use `label-md` with an underline that only appears on hover.
+
+### Cards & Lists
+**Forbid the use of divider lines.** 
+*   **Cards:** Use `surface-container-low` with `xl` (0.75rem) roundedness.
+*   **Lists:** Separate items using 12px of vertical white space. Use a `surface-container-highest` background on hover to indicate interactivity.
+
+### Input Fields
+Inputs should feel integrated. Use `surface-container-lowest` as the fill color. On focus, the border doesn't just change color—the element should "glow" slightly by applying a 4px blur of the `primary` color as an outer shadow.
+
+## 6. Do's and Don'ts
+
+### Do
+*   **Do** use asymmetrical layouts. Let the header text hang further left than the content cards to create an editorial rhythm.
+*   **Do** use `tertiary` (`#ffb783`) for "human" elements—tooltips, success states, or highlights—to break the cool blue/indigo palette.
+*   **Do** leverage the `full` roundedness scale for chips and status indicators to contrast against the `xl` cards.
+
+### Don't
+*   **Don't** use 100% white (#FFFFFF) for text. Always use `on-surface` or `on-surface-variant` to maintain the sophisticated "Obsidian" tone.
+*   **Don't** use standard "Drop Shadows." If it looks like a default shadow from a 2010 UI kit, it's too heavy.
+*   **Don't** use dividers. If two elements feel cluttered, add more space, don't add a line.
+
+
+web application/stitch/projects/931626344000960973/screens/467f6cdd22fd46a59c17658dd4770409
