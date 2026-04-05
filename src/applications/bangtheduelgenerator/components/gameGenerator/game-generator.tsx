@@ -59,8 +59,7 @@ const GameGeneratorScreen: React.FC = () => {
       "Renegades vs Bandits",
     ];
 
-    const randomGameType =
-      gameTypes[Math.floor(Math.random() * gameTypes.length)];
+    const randomGameType = gameTypes[Math.floor(Math.random() * gameTypes.length)];
 
     const newPlayer1Generation = generateRandomNumbers();
     const newPlayer2Generation = generateRandomNumbers();
@@ -132,8 +131,7 @@ const GameGeneratorScreen: React.FC = () => {
         player3: player3 !== "Unknown Player 3" ? player3 : undefined,
         player1Generation,
         player2Generation,
-        player3Generation:
-          player3 !== "Unknown Player 3" ? player3Generation : undefined,
+        player3Generation: player3 !== "Unknown Player 3" ? player3Generation : undefined,
         winner: selectedWinner,
         timestamp,
       };
@@ -239,10 +237,12 @@ const GameGeneratorScreen: React.FC = () => {
       </div>
       {!selectedWinner && <div className="error">Who is the winner?</div>}
       <div className="generate-another-game">
-        <button onClick={reloadPage} disabled={!selectedWinner}>
+        <button type="button" onClick={reloadPage} disabled={!selectedWinner}>
           Generate another game
         </button>
-        <button onClick={endSession}>End Session and Save Results</button>
+        <button type="button" onClick={endSession}>
+          End Session and Save Results
+        </button>
       </div>
     </div>
   );

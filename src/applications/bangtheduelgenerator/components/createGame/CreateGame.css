@@ -1,12 +1,12 @@
 @font-face {
-  font-family: 'Western';
-  src: url('../../assets/WEST____.TTF') format('truetype');
+  font-family: "Western";
+  src: url("../../assets/WEST____.TTF") format("truetype");
   font-weight: normal;
   font-style: normal;
 }
 
 .rootDiv {
-  background-image: url('../../assets/wood-pattern.png');
+  background-image: url("../../assets/wood-pattern.png");
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
