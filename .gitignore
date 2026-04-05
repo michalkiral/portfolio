@@ -12,9 +12,10 @@ dist
 dist-ssr
 *.local
 
-# Local Claude context — keep off GitHub
 claude_context.md
 hub-redesign.md
+roadmap.md
+.claude/
 
 # Editor directories and files
 .vscode/*
