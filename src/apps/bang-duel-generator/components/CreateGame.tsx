@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import "./CreateGame.css";
+import woodPattern from "../assets/wood-pattern.png";
 
 type CreateGameProps = {
   img: string;
@@ -54,14 +54,18 @@ const CreateGame: React.FC<CreateGameProps> = ({ img }) => {
   };
 
   return (
-    <div className="rootDiv">
-      <div className="container">
-        <div className="logo">
-          <img src={img} alt="Game Logo" />
+    <div
+      className="flex flex-1 items-center justify-center bg-cover bg-center bg-no-repeat p-5 font-western tracking-widest text-white/90 [color-scheme:light_dark]"
+      style={{ backgroundImage: `url(${woodPattern})` }}
+    >
+      <div className="box-border flex min-h-[400px] w-[90%] max-w-[600px] flex-col items-center justify-around rounded-lg border-[3px] border-white bg-[#242424] p-4">
+        <div className="mt-5 flex w-1/4 max-w-[150px] items-center justify-center rounded-lg bg-white">
+          <img src={img} alt="Game Logo" className="h-auto w-full rounded-lg object-contain" />
         </div>
-        <div className="player-count">
-          <h2>Choose Player Count</h2>
-          <label>
+
+        <div className="flex flex-col items-center gap-2">
+          <h2 className="text-lg font-semibold">Choose Player Count</h2>
+          <label className="flex cursor-pointer items-center gap-2">
             <input
               type="radio"
               name="playerCount"
@@ -71,7 +75,7 @@ const CreateGame: React.FC<CreateGameProps> = ({ img }) => {
             />
             2 Players
           </label>
-          <label>
+          <label className="flex cursor-pointer items-center gap-2">
             <input
               type="radio"
               name="playerCount"
@@ -82,8 +86,9 @@ const CreateGame: React.FC<CreateGameProps> = ({ img }) => {
             3 Players
           </label>
         </div>
-        <div className="player-container">
-          <div className="player">
+
+        <div className="flex flex-col items-center gap-5 md:flex-row">
+          <div className="flex flex-col items-center">
             <label htmlFor="player1">Player 1</label>
             <input
               type="text"
@@ -92,9 +97,10 @@ const CreateGame: React.FC<CreateGameProps> = ({ img }) => {
               placeholder="Name"
               value={player1Input}
               onChange={(e) => setPlayer1Input(e.target.value)}
+              className="mt-1 rounded border border-black p-1 text-black"
             />
           </div>
-          <div className="player">
+          <div className="flex flex-col items-center">
             <label htmlFor="player2">Player 2</label>
             <input
               type="text"
@@ -103,10 +109,11 @@ const CreateGame: React.FC<CreateGameProps> = ({ img }) => {
               placeholder="Name"
               value={player2Input}
               onChange={(e) => setPlayer2Input(e.target.value)}
+              className="mt-1 rounded border border-black p-1 text-black"
             />
           </div>
           {playerCount === "3 Players" && (
-            <div className="player">
+            <div className="flex flex-col items-center">
               <label htmlFor="player3">Player 3</label>
               <input
                 type="text"
@@ -115,18 +122,21 @@ const CreateGame: React.FC<CreateGameProps> = ({ img }) => {
                 placeholder="Name"
                 value={player3Input}
                 onChange={(e) => setPlayer3Input(e.target.value)}
+                className="mt-1 rounded border border-black p-1 text-black"
               />
             </div>
           )}
         </div>
 
-        {errorMessage && <div className="error">{errorMessage}</div>}
+        {errorMessage && <div className="text-red-400">{errorMessage}</div>}
 
-        <div className="create-session">
-          <button type="button" onClick={createSession}>
-            Create a session
-          </button>
-        </div>
+        <button
+          type="button"
+          onClick={createSession}
+          className="cursor-pointer rounded-lg border border-transparent bg-[#1a1a1a] px-5 py-2 font-medium transition-colors hover:border-[#646cff] focus-visible:outline-4 focus-visible:outline-auto"
+        >
+          Create a session
+        </button>
       </div>
     </div>
   );

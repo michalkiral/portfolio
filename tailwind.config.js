@@ -2,7 +2,11 @@
 export default {
   content: ["./src/**/*.{js,jsx,ts,tsx}"],
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        western: ["Western", "system-ui", "Avenir", "Helvetica", "Arial", "sans-serif"],
+      },
+    },
   },
   plugins: [],
 };

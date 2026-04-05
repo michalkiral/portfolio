@@ -1,6 +1,5 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import "./GameGenerator.css";
 
 interface Result {
   game: string;
@@ -170,33 +169,38 @@ const GameGenerator: React.FC = () => {
     generateAnotherGame();
   };
 
+  const btnClass =
+    "cursor-pointer rounded-lg border border-transparent bg-[#1a1a1a] px-5 py-2 font-medium text-white transition-colors hover:border-[#646cff] focus:outline-4 focus:outline-auto disabled:cursor-not-allowed disabled:opacity-40";
+
   return (
-    <div className="game-container">
-      <h1>Game</h1>
-      <div className="player-container">
-        <div className="player">
-          <p>Player 1: {player1}</p>
+    <div className="flex h-[500px] w-[500px] flex-col items-center justify-around rounded-lg border-[3px] border-white p-4">
+      <h1 className="m-0 text-xl font-bold">Game</h1>
+
+      <div className="flex flex-row items-center gap-5">
+        <div className="flex flex-col items-center">
+          <p className="m-0">Player 1: {player1}</p>
         </div>
-        <div className="player">
-          <p>Player 2: {player2}</p>
+        <div className="flex flex-col items-center">
+          <p className="m-0">Player 2: {player2}</p>
         </div>
         {player3 !== "Unknown Player 3" && (
-          <div className="player">
-            <p>Player 3: {player3}</p>
+          <div className="flex flex-col items-center">
+            <p className="m-0">Player 3: {player3}</p>
           </div>
         )}
       </div>
-      <div className="generated-game">
-        <p>Game: {game}</p>
+
+      <p>Game: {game}</p>
+
+      <div className="flex flex-col items-center gap-1">
+        <p className="m-0">Player 1: {player1Generation}</p>
+        <p className="m-0">Player 2: {player2Generation}</p>
+        {player3 !== "Unknown Player 3" && <p className="m-0">Player 3: {player3Generation}</p>}
       </div>
-      <div className="generated-characters">
-        <p>Player 1: {player1Generation}</p>
-        <p>Player 2: {player2Generation}</p>
-        {player3 !== "Unknown Player 3" && <p>Player 3: {player3Generation}</p>}
-      </div>
-      <div className="winner">
-        <p>Choose the winner:</p>
-        <label>
+
+      <div className="flex flex-col items-center gap-2.5">
+        <p className="m-0">Choose the winner:</p>
+        <label className="flex cursor-pointer items-center gap-2.5">
           <input
             type="radio"
             name="winner"
@@ -206,7 +210,7 @@ const GameGenerator: React.FC = () => {
           />
           {player1}
         </label>
-        <label>
+        <label className="flex cursor-pointer items-center gap-2.5">
           <input
             type="radio"
             name="winner"
@@ -217,7 +221,7 @@ const GameGenerator: React.FC = () => {
           {player2}
         </label>
         {player3 !== "Unknown Player 3" && (
-          <label>
+          <label className="flex cursor-pointer items-center gap-2.5">
             <input
               type="radio"
               name="winner"
@@ -229,12 +233,14 @@ const GameGenerator: React.FC = () => {
           </label>
         )}
       </div>
-      {!selectedWinner && <div className="error">Who is the winner?</div>}
-      <div className="generate-another-game">
-        <button type="button" onClick={reloadPage} disabled={!selectedWinner}>
+
+      {!selectedWinner && <div className="text-red-500">Who is the winner?</div>}
+
+      <div className="flex gap-3">
+        <button type="button" onClick={reloadPage} disabled={!selectedWinner} className={btnClass}>
           Generate another game
         </button>
-        <button type="button" onClick={endSession}>
+        <button type="button" onClick={endSession} className={btnClass}>
           End Session and Save Results
         </button>
       </div>

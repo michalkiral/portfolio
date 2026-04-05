@@ -1,3 +1,10 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@font-face {
+  font-family: "Western";
+  src: url("./apps/bang-duel-generator/assets/WEST____.TTF") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
