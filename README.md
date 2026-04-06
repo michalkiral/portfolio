@@ -121,5 +121,3 @@ src/
 ├── main.tsx            # Router and app entry point
 └── index.css           # Tailwind directives
 ```
-
-See [`claude_context.md`](./claude_context.md) for the full architecture plan and roadmap.
