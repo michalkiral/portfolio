@@ -1,3 +1,6 @@
+import EntryList from "@/apps/randomizer/components/EntryList";
+import GroupSelector from "@/apps/randomizer/components/GroupSelector";
+import { useGroups } from "@/apps/randomizer/hooks/useGroups";
 import type { Mode } from "@/apps/randomizer/types";
 import AppLayout from "@/shared/components/AppLayout";
 import React, { useState } from "react";
@@ -13,8 +16,25 @@ const MODES: { id: Mode; label: string; icon: string }[] = [
   { id: "weighted-pick", label: "Weighted", icon: "⚖️" },
 ];
 
+const MODES_WITHOUT_ENTRIES: Mode[] = ["coin-flip", "number-generator", "dice-roller"];
+
 const RandomizerScreen: React.FC = () => {
   const [activeMode, setActiveMode] = useState<Mode>("coin-flip");
+  const {
+    groups,
+    activeGroup,
+    activeGroupId,
+    setActiveGroupId,
+    createGroup,
+    renameGroup,
+    deleteGroup,
+    addEntry,
+    removeEntry,
+    updateEntry,
+    moveEntry,
+  } = useGroups();
+
+  const showEntries = !MODES_WITHOUT_ENTRIES.includes(activeMode);
 
   return (
     <AppLayout title="Randomizer">
@@ -39,10 +59,32 @@ const RandomizerScreen: React.FC = () => {
           </div>
         </div>
 
-        <div className="flex flex-1 items-center justify-center p-8">
-          <p className="text-body-md text-on-surface-variant">
-            {MODES.find((m) => m.id === activeMode)?.label} — coming soon.
-          </p>
+        <div className="flex flex-1 overflow-hidden">
+          {showEntries && (
+            <aside className="flex w-72 shrink-0 flex-col gap-4 overflow-y-auto border-r border-outline-variant/15 p-4">
+              <GroupSelector
+                groups={groups}
+                activeGroupId={activeGroupId}
+                onSelect={setActiveGroupId}
+                onCreate={createGroup}
+                onRename={renameGroup}
+                onDelete={deleteGroup}
+              />
+              <EntryList
+                entries={activeGroup.entries}
+                onAdd={addEntry}
+                onRemove={removeEntry}
+                onUpdate={updateEntry}
+                onMove={moveEntry}
+              />
+            </aside>
+          )}
+
+          <main className="flex flex-1 items-center justify-center overflow-y-auto p-8">
+            <p className="text-body-md text-on-surface-variant">
+              {MODES.find((m) => m.id === activeMode)?.label} — coming soon.
+            </p>
+          </main>
         </div>
       </div>
     </AppLayout>
