@@ -18,8 +18,7 @@ const HomeScreen: React.FC = () => {
 
       <header className="relative mb-16 max-w-2xl">
         <p className="mb-3 text-label-md uppercase tracking-widest text-tertiary">Selected Work</p>
-        <h1 className="text-display-lg font-bold text-on-surface">The Lab.</h1>
-        <p className="mt-5 max-w-md text-body-md text-on-surface-variant">
+        <p className="max-w-md text-body-md text-on-surface-variant">
           A collection of experiments, tools, and things built for the fun of it.
         </p>
       </header>
