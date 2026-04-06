@@ -1,37 +1,13 @@
 import { appRegistry } from "@/registry/apps";
 import AppCard from "@/shared/components/AppCard";
 import { useAppMeta } from "@/shared/context/AppMetaContext";
-import React, { useState } from "react";
-
-type FilterMode = "all" | "favorites";
-
-const allTags = [...new Set(appRegistry.flatMap((app) => app.tags))].sort();
+import { useAppFilter } from "@/shared/hooks/useAppFilter";
+import React from "react";
 
 const HomeScreen: React.FC = () => {
   const { favorites } = useAppMeta();
-  const [filterMode, setFilterMode] = useState<FilterMode>("all");
-  const [query, setQuery] = useState("");
-  const [selectedTags, setSelectedTags] = useState<Set<string>>(new Set());
-
-  const toggleTag = (tag: string) => {
-    setSelectedTags((prev) => {
-      const next = new Set(prev);
-      next.has(tag) ? next.delete(tag) : next.add(tag);
-      return next;
-    });
-  };
-
-  const displayed = appRegistry.filter((app) => {
-    if (filterMode === "favorites" && !favorites.has(app.id)) return false;
-    if (query) {
-      const q = query.toLowerCase();
-      const matchesTitle = app.title.toLowerCase().includes(q);
-      const matchesTag = app.tags.some((tag) => tag.toLowerCase().includes(q));
-      if (!matchesTitle && !matchesTag) return false;
-    }
-    if (selectedTags.size > 0 && !app.tags.some((tag) => selectedTags.has(tag))) return false;
-    return true;
-  });
+  const { filterMode, setFilterMode, query, setQuery, selectedTags, toggleTag, filtered, allTags } =
+    useAppFilter(appRegistry, favorites);
 
   return (
     <div className="relative min-h-screen overflow-hidden bg-surface px-6 py-16 sm:px-12 lg:px-24">
@@ -120,11 +96,11 @@ const HomeScreen: React.FC = () => {
           <p className="text-body-md text-on-surface-variant">
             No favorites yet — click the star on any card.
           </p>
-        ) : displayed.length === 0 ? (
+        ) : filtered.length === 0 ? (
           <p className="text-body-md text-on-surface-variant">No apps match your search.</p>
         ) : (
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {displayed.map((app) => (
+            {filtered.map((app) => (
               <AppCard key={app.id} app={app} />
             ))}
           </div>
