@@ -5,10 +5,21 @@ import React, { useState } from "react";
 
 type FilterMode = "all" | "favorites";
 
+const allTags = [...new Set(appRegistry.flatMap((app) => app.tags))].sort();
+
 const HomeScreen: React.FC = () => {
   const { favorites } = useAppMeta();
   const [filterMode, setFilterMode] = useState<FilterMode>("all");
   const [query, setQuery] = useState("");
+  const [selectedTags, setSelectedTags] = useState<Set<string>>(new Set());
+
+  const toggleTag = (tag: string) => {
+    setSelectedTags((prev) => {
+      const next = new Set(prev);
+      next.has(tag) ? next.delete(tag) : next.add(tag);
+      return next;
+    });
+  };
 
   const displayed = appRegistry.filter((app) => {
     if (filterMode === "favorites" && !favorites.has(app.id)) return false;
@@ -18,6 +29,7 @@ const HomeScreen: React.FC = () => {
       const matchesTag = app.tags.some((tag) => tag.toLowerCase().includes(q));
       if (!matchesTitle && !matchesTag) return false;
     }
+    if (selectedTags.size > 0 && !app.tags.some((tag) => selectedTags.has(tag))) return false;
     return true;
   });
 
@@ -37,7 +49,7 @@ const HomeScreen: React.FC = () => {
       </header>
 
       <section className="relative lg:pl-12">
-        <div className="mb-6 flex flex-wrap items-center gap-6">
+        <div className="mb-4 flex flex-wrap items-center gap-6">
           <button
             type="button"
             onClick={() => setFilterMode("all")}
@@ -85,6 +97,23 @@ const HomeScreen: React.FC = () => {
               </button>
             )}
           </div>
+        </div>
+
+        <div className="mb-6 flex flex-wrap gap-2">
+          {allTags.map((tag) => (
+            <button
+              key={tag}
+              type="button"
+              onClick={() => toggleTag(tag)}
+              className={`rounded-full px-3 py-0.5 text-label-sm uppercase tracking-widest transition-colors duration-150 ${
+                selectedTags.has(tag)
+                  ? "bg-primary/20 text-primary"
+                  : "bg-surface-container-highest text-on-surface-variant hover:text-on-surface"
+              }`}
+            >
+              {tag}
+            </button>
+          ))}
         </div>
 
         {filterMode === "favorites" && favorites.size === 0 ? (
