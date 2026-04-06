@@ -1,5 +1,28 @@
 import React, { useState } from "react";
 
+type ToggleProps = {
+  label: string;
+  value: boolean;
+  onChange: (v: boolean) => void;
+};
+
+const Toggle: React.FC<ToggleProps> = ({ label, value, onChange }) => (
+  <button
+    type="button"
+    onClick={() => onChange(!value)}
+    className={`rounded-full px-3 py-1 text-label-md uppercase tracking-widest transition-colors duration-150 ${
+      value
+        ? "bg-primary/20 text-primary"
+        : "bg-surface-container-high text-on-surface-variant hover:text-on-surface"
+    }`}
+  >
+    {label}
+  </button>
+);
+
+const inputClass =
+  "w-full rounded-lg border border-outline-variant/15 bg-surface-container-lowest px-3 py-2 text-body-md text-on-surface outline-none transition-shadow duration-150 focus:shadow-glow-primary";
+
 const NumberGenerator: React.FC = () => {
   const [min, setMin] = useState("1");
   const [max, setMax] = useState("100");
@@ -10,31 +33,40 @@ const NumberGenerator: React.FC = () => {
   const [error, setError] = useState("");
 
   const generate = () => {
-    const minVal = Number(min);
-    const maxVal = Number(max);
+    const rawMin = Number(min);
+    const rawMax = Number(max);
     const countVal = Math.max(1, Math.min(100, Math.floor(Number(count))));
 
-    if (Number.isNaN(minVal) || Number.isNaN(maxVal)) {
+    if (Number.isNaN(rawMin) || Number.isNaN(rawMax)) {
       setError("Min and max must be valid numbers.");
       return;
     }
-    if (minVal >= maxVal) {
+    if (rawMin >= rawMax) {
       setError("Min must be less than max.");
       return;
     }
-    if (unique && !decimals && countVal > maxVal - minVal + 1) {
-      setError(`Can't generate ${countVal} unique integers in that range.`);
-      return;
-    }
+
     setError("");
 
     if (decimals) {
       setResults(
         Array.from(
           { length: countVal },
-          () => Math.round((Math.random() * (maxVal - minVal) + minVal) * 100) / 100,
+          () => Math.round((Math.random() * (rawMax - rawMin) + rawMin) * 100) / 100,
         ),
       );
+      return;
+    }
+
+    const minVal = Math.ceil(rawMin);
+    const maxVal = Math.floor(rawMax);
+
+    if (minVal > maxVal) {
+      setError("No integers exist in that range.");
+      return;
+    }
+    if (unique && countVal > maxVal - minVal + 1) {
+      setError(`Can't generate ${countVal} unique integers in [${minVal}, ${maxVal}].`);
       return;
     }
 
@@ -54,27 +86,6 @@ const NumberGenerator: React.FC = () => {
       );
     }
   };
-
-  const inputClass =
-    "w-full rounded-lg border border-outline-variant/15 bg-surface-container-lowest px-3 py-2 text-body-md text-on-surface outline-none transition-shadow duration-150 focus:shadow-glow-primary";
-
-  const Toggle: React.FC<{ label: string; value: boolean; onChange: (v: boolean) => void }> = ({
-    label,
-    value,
-    onChange,
-  }) => (
-    <button
-      type="button"
-      onClick={() => onChange(!value)}
-      className={`rounded-full px-3 py-1 text-label-md uppercase tracking-widest transition-colors duration-150 ${
-        value
-          ? "bg-primary/20 text-primary"
-          : "bg-surface-container-high text-on-surface-variant hover:text-on-surface"
-      }`}
-    >
-      {label}
-    </button>
-  );
 
   return (
     <div className="flex w-full max-w-sm flex-col gap-6">
