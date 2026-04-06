@@ -1,3 +1,4 @@
+import ResultReveal from "@/apps/randomizer/components/ResultReveal";
 import type { Entry } from "@/apps/randomizer/types";
 import React, { useState } from "react";
 
@@ -19,6 +20,7 @@ function weightedRandom(entries: Entry[]): Entry {
 const WeightedPick: React.FC<WeightedPickProps> = ({ entries, onUpdate }) => {
   const [result, setResult] = useState<Entry | null>(null);
   const [rolling, setRolling] = useState(false);
+  const [version, setVersion] = useState(0);
 
   const totalWeight = entries.reduce((s, e) => s + Math.max(0, e.weight), 0);
 
@@ -28,6 +30,7 @@ const WeightedPick: React.FC<WeightedPickProps> = ({ entries, onUpdate }) => {
     setResult(null);
     setTimeout(() => {
       setResult(weightedRandom(entries));
+      setVersion((v) => v + 1);
       setRolling(false);
     }, 500);
   };
@@ -111,7 +114,11 @@ const WeightedPick: React.FC<WeightedPickProps> = ({ entries, onUpdate }) => {
             </p>
           )}
           {!rolling && result && (
-            <p className="text-center text-headline-md font-bold text-on-surface">{result.label}</p>
+            <ResultReveal resultKey={version} onRedo={pick}>
+              <p className="text-center text-headline-md font-bold text-on-surface">
+                {result.label}
+              </p>
+            </ResultReveal>
           )}
         </div>
       )}

@@ -1,3 +1,4 @@
+import ResultReveal from "@/apps/randomizer/components/ResultReveal";
 import type { Entry } from "@/apps/randomizer/types";
 import React, { useState } from "react";
 
@@ -8,6 +9,7 @@ type SinglePickProps = {
 const SinglePick: React.FC<SinglePickProps> = ({ entries }) => {
   const [result, setResult] = useState<Entry | null>(null);
   const [rolling, setRolling] = useState(false);
+  const [version, setVersion] = useState(0);
 
   const pick = () => {
     if (entries.length === 0 || rolling) return;
@@ -15,6 +17,7 @@ const SinglePick: React.FC<SinglePickProps> = ({ entries }) => {
     setResult(null);
     setTimeout(() => {
       setResult(entries[Math.floor(Math.random() * entries.length)]);
+      setVersion((v) => v + 1);
       setRolling(false);
     }, 500);
   };
@@ -43,7 +46,9 @@ const SinglePick: React.FC<SinglePickProps> = ({ entries }) => {
           </p>
         )}
         {!rolling && result && (
-          <p className="text-center text-headline-md font-bold text-on-surface">{result.label}</p>
+          <ResultReveal resultKey={version} onRedo={pick}>
+            <p className="text-center text-headline-md font-bold text-on-surface">{result.label}</p>
+          </ResultReveal>
         )}
         {!rolling && !result && (
           <p className="text-body-md text-on-surface-variant">Your pick will appear here.</p>

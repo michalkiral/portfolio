@@ -1,3 +1,4 @@
+import ResultReveal from "@/apps/randomizer/components/ResultReveal";
 import React, { useState } from "react";
 
 type ToggleProps = {
@@ -31,6 +32,7 @@ const NumberGenerator: React.FC = () => {
   const [unique, setUnique] = useState(false);
   const [results, setResults] = useState<number[]>([]);
   const [error, setError] = useState("");
+  const [version, setVersion] = useState(0);
 
   const generate = () => {
     const rawMin = Number(min);
@@ -55,6 +57,7 @@ const NumberGenerator: React.FC = () => {
           () => Math.round((Math.random() * (rawMax - rawMin) + rawMin) * 100) / 100,
         ),
       );
+      setVersion((v) => v + 1);
       return;
     }
 
@@ -85,6 +88,7 @@ const NumberGenerator: React.FC = () => {
         ),
       );
     }
+    setVersion((v) => v + 1);
   };
 
   return (
@@ -150,16 +154,18 @@ const NumberGenerator: React.FC = () => {
       </button>
 
       {results.length > 0 && (
-        <div className="flex flex-wrap gap-2">
-          {results.map((n, i) => (
-            <span
-              key={`${i}-${n}`}
-              className="rounded-lg bg-surface-container-high px-4 py-2 text-headline-sm font-bold text-on-surface"
-            >
-              {n}
-            </span>
-          ))}
-        </div>
+        <ResultReveal resultKey={version} onRedo={generate}>
+          <div className="flex flex-wrap gap-2">
+            {results.map((n, i) => (
+              <span
+                key={`${i}-${n}`}
+                className="rounded-lg bg-surface-container-high px-4 py-2 text-headline-sm font-bold text-on-surface"
+              >
+                {n}
+              </span>
+            ))}
+          </div>
+        </ResultReveal>
       )}
     </div>
   );

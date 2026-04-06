@@ -1,3 +1,4 @@
+import ResultReveal from "@/apps/randomizer/components/ResultReveal";
 import type { Entry } from "@/apps/randomizer/types";
 import React, { useState } from "react";
 
@@ -17,6 +18,7 @@ function shuffle<T>(arr: T[]): T[] {
 const OrderShuffle: React.FC<OrderShuffleProps> = ({ entries }) => {
   const [result, setResult] = useState<Entry[]>([]);
   const [rolling, setRolling] = useState(false);
+  const [version, setVersion] = useState(0);
 
   const run = () => {
     if (entries.length === 0 || rolling) return;
@@ -24,6 +26,7 @@ const OrderShuffle: React.FC<OrderShuffleProps> = ({ entries }) => {
     setResult([]);
     setTimeout(() => {
       setResult(shuffle(entries));
+      setVersion((v) => v + 1);
       setRolling(false);
     }, 500);
   };
@@ -46,19 +49,21 @@ const OrderShuffle: React.FC<OrderShuffleProps> = ({ entries }) => {
       </button>
 
       {result.length > 0 && (
-        <ol className="flex flex-col gap-2">
-          {result.map((entry, idx) => (
-            <li
-              key={entry.id}
-              className="flex items-center gap-3 rounded-lg bg-surface-container px-4 py-3"
-            >
-              <span className="w-6 text-right text-label-md text-on-surface-variant">
-                {idx + 1}.
-              </span>
-              <span className="text-body-md text-on-surface">{entry.label}</span>
-            </li>
-          ))}
-        </ol>
+        <ResultReveal resultKey={version} onRedo={run}>
+          <ol className="flex flex-col gap-2">
+            {result.map((entry, idx) => (
+              <li
+                key={entry.id}
+                className="flex items-center gap-3 rounded-lg bg-surface-container px-4 py-3"
+              >
+                <span className="w-6 text-right text-label-md text-on-surface-variant">
+                  {idx + 1}.
+                </span>
+                <span className="text-body-md text-on-surface">{entry.label}</span>
+              </li>
+            ))}
+          </ol>
+        </ResultReveal>
       )}
     </div>
   );

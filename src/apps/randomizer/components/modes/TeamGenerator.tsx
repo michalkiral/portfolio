@@ -1,3 +1,4 @@
+import ResultReveal from "@/apps/randomizer/components/ResultReveal";
 import type { Entry } from "@/apps/randomizer/types";
 import React, { useState } from "react";
 
@@ -27,6 +28,7 @@ const TeamGenerator: React.FC<TeamGeneratorProps> = ({ entries }) => {
   const [teamCount, setTeamCount] = useState(2);
   const [teams, setTeams] = useState<Entry[][]>([]);
   const [rolling, setRolling] = useState(false);
+  const [version, setVersion] = useState(0);
 
   const maxTeams = Math.min(10, entries.length);
 
@@ -36,6 +38,7 @@ const TeamGenerator: React.FC<TeamGeneratorProps> = ({ entries }) => {
     setTeams([]);
     setTimeout(() => {
       setTeams(makeTeams(entries, teamCount));
+      setVersion((v) => v + 1);
       setRolling(false);
     }, 500);
   };
@@ -81,25 +84,27 @@ const TeamGenerator: React.FC<TeamGeneratorProps> = ({ entries }) => {
       </button>
 
       {teams.length > 0 && (
-        <div className="flex flex-col gap-3">
-          {teams.map((team, idx) => (
-            <div key={idx} className="rounded-lg bg-surface-container px-4 py-3">
-              <p className="mb-2 text-label-md uppercase tracking-widest text-on-surface-variant">
-                Team {idx + 1}
-              </p>
-              <div className="flex flex-wrap gap-2">
-                {team.map((entry) => (
-                  <span
-                    key={entry.id}
-                    className="rounded-md bg-surface-container-high px-2 py-0.5 text-body-md text-on-surface"
-                  >
-                    {entry.label}
-                  </span>
-                ))}
+        <ResultReveal resultKey={version} onRedo={generate}>
+          <div className="flex flex-col gap-3">
+            {teams.map((team, idx) => (
+              <div key={idx} className="rounded-lg bg-surface-container px-4 py-3">
+                <p className="mb-2 text-label-md uppercase tracking-widest text-on-surface-variant">
+                  Team {idx + 1}
+                </p>
+                <div className="flex flex-wrap gap-2">
+                  {team.map((entry) => (
+                    <span
+                      key={entry.id}
+                      className="rounded-md bg-surface-container-high px-2 py-0.5 text-body-md text-on-surface"
+                    >
+                      {entry.label}
+                    </span>
+                  ))}
+                </div>
               </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        </ResultReveal>
       )}
     </div>
   );

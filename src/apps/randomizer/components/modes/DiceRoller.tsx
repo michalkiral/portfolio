@@ -1,3 +1,4 @@
+import ResultReveal from "@/apps/randomizer/components/ResultReveal";
 import React, { useState } from "react";
 
 const DICE = [4, 6, 8, 10, 12, 20, 100] as const;
@@ -8,6 +9,7 @@ const DiceRoller: React.FC = () => {
   const [count, setCount] = useState(1);
   const [results, setResults] = useState<number[]>([]);
   const [rolling, setRolling] = useState(false);
+  const [version, setVersion] = useState(0);
 
   const roll = () => {
     if (rolling) return;
@@ -15,6 +17,7 @@ const DiceRoller: React.FC = () => {
     setResults([]);
     setTimeout(() => {
       setResults(Array.from({ length: count }, () => Math.floor(Math.random() * die) + 1));
+      setVersion((v) => v + 1);
       setRolling(false);
     }, 500);
   };
@@ -71,23 +74,25 @@ const DiceRoller: React.FC = () => {
       </button>
 
       {results.length > 0 && (
-        <div className="flex flex-col gap-3">
-          <div className="flex flex-wrap gap-2">
-            {results.map((n, i) => (
-              <span
-                key={i}
-                className="rounded-lg bg-surface-container-high px-4 py-2 text-headline-sm font-bold text-on-surface"
-              >
-                {n}
-              </span>
-            ))}
+        <ResultReveal resultKey={version} onRedo={roll}>
+          <div className="flex flex-col gap-3">
+            <div className="flex flex-wrap gap-2">
+              {results.map((n, i) => (
+                <span
+                  key={i}
+                  className="rounded-lg bg-surface-container-high px-4 py-2 text-headline-sm font-bold text-on-surface"
+                >
+                  {n}
+                </span>
+              ))}
+            </div>
+            {count > 1 && (
+              <p className="text-label-md uppercase tracking-widest text-on-surface-variant">
+                Total: <span className="font-bold text-on-surface">{total}</span>
+              </p>
+            )}
           </div>
-          {count > 1 && (
-            <p className="text-label-md uppercase tracking-widest text-on-surface-variant">
-              Total: <span className="text-on-surface font-bold">{total}</span>
-            </p>
-          )}
-        </div>
+        </ResultReveal>
       )}
     </div>
   );

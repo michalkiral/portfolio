@@ -1,3 +1,4 @@
+import ResultReveal from "@/apps/randomizer/components/ResultReveal";
 import type { Entry } from "@/apps/randomizer/types";
 import React, { useState } from "react";
 
@@ -30,6 +31,7 @@ function makePairs(entries: Entry[]): Entry[][] {
 const PairGenerator: React.FC<PairGeneratorProps> = ({ entries }) => {
   const [pairs, setPairs] = useState<Entry[][]>([]);
   const [rolling, setRolling] = useState(false);
+  const [version, setVersion] = useState(0);
 
   const generate = () => {
     if (entries.length < 2 || rolling) return;
@@ -37,6 +39,7 @@ const PairGenerator: React.FC<PairGeneratorProps> = ({ entries }) => {
     setPairs([]);
     setTimeout(() => {
       setPairs(makePairs(entries));
+      setVersion((v) => v + 1);
       setRolling(false);
     }, 500);
   };
@@ -61,31 +64,33 @@ const PairGenerator: React.FC<PairGeneratorProps> = ({ entries }) => {
       </button>
 
       {pairs.length > 0 && (
-        <ol className="flex flex-col gap-2">
-          {pairs.map((pair, idx) => (
-            <li
-              key={idx}
-              className="flex items-center gap-2 rounded-lg bg-surface-container px-4 py-3"
-            >
-              <span className="w-5 shrink-0 text-right text-label-md text-on-surface-variant">
-                {idx + 1}.
-              </span>
-              <div className="flex flex-1 flex-wrap items-center gap-2">
-                {pair.map((entry, eIdx) => (
-                  <React.Fragment key={entry.id}>
-                    {eIdx > 0 && <span className="text-label-md text-on-surface-variant">×</span>}
-                    <span className="rounded-md bg-surface-container-high px-2 py-0.5 text-body-md text-on-surface">
-                      {entry.label}
-                    </span>
-                  </React.Fragment>
-                ))}
-                {pair.length === 3 && (
-                  <span className="ml-auto text-label-sm text-on-surface-variant">(trio)</span>
-                )}
-              </div>
-            </li>
-          ))}
-        </ol>
+        <ResultReveal resultKey={version} onRedo={generate}>
+          <ol className="flex flex-col gap-2">
+            {pairs.map((pair, idx) => (
+              <li
+                key={idx}
+                className="flex items-center gap-2 rounded-lg bg-surface-container px-4 py-3"
+              >
+                <span className="w-5 shrink-0 text-right text-label-md text-on-surface-variant">
+                  {idx + 1}.
+                </span>
+                <div className="flex flex-1 flex-wrap items-center gap-2">
+                  {pair.map((entry, eIdx) => (
+                    <React.Fragment key={entry.id}>
+                      {eIdx > 0 && <span className="text-label-md text-on-surface-variant">×</span>}
+                      <span className="rounded-md bg-surface-container-high px-2 py-0.5 text-body-md text-on-surface">
+                        {entry.label}
+                      </span>
+                    </React.Fragment>
+                  ))}
+                  {pair.length === 3 && (
+                    <span className="ml-auto text-label-sm text-on-surface-variant">(trio)</span>
+                  )}
+                </div>
+              </li>
+            ))}
+          </ol>
+        </ResultReveal>
       )}
     </div>
   );
