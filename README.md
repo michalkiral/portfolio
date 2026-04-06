@@ -39,7 +39,45 @@ The dev server starts at `http://localhost:5173`.
 | `npm run preview` | Locally preview the production build |
 | `npm run lint` | Run Biome — checks linting and formatting |
 | `npm run format` | Run Biome formatter and auto-fix files |
-| `npm run deploy` | Build and deploy to GitHub Pages |
+| `npm run deploy` | Build and push to GitHub Pages |
+
+---
+
+## Deployment
+
+Deployments are manual. Run:
+
+```bash
+npm run deploy
+```
+
+This does two things in sequence:
+1. **Build** — runs `npm run build`, which type-checks and bundles the project into `dist/`
+2. **Publish** — the `gh-pages` package force-pushes `dist/` to the `gh-pages` branch on GitHub
+
+GitHub Pages serves the `gh-pages` branch. The live site updates within about a minute of pushing.
+
+### First-time GitHub setup
+
+If GitHub Pages isn't configured yet on the repository:
+
+1. Go to the repository on GitHub
+2. Settings → Pages
+3. Under **Source**, select "Deploy from a branch"
+4. Set branch to `gh-pages`, folder to `/ (root)`
+5. Click Save
+
+After that, `npm run deploy` is all you need for every subsequent deployment.
+
+### CI pipeline
+
+The CI pipeline (`.github/workflows/build.yml`) runs on every push to `main` and on all pull requests. It checks:
+
+1. **Lint & Format** — `biome check .`
+2. **Type Check** — `tsc -b --noEmit`
+3. **Build** — `vite build` (only runs if lint and typecheck pass)
+
+The pipeline validates but never deploys — that stays manual.
 
 ---
 
@@ -47,29 +85,16 @@ The dev server starts at `http://localhost:5173`.
 
 This project uses [Biome](https://biomejs.dev/) for both linting and formatting. It replaces ESLint and Prettier in a single tool.
 
-### Check everything (lint + format)
-
 ```bash
-npm run lint
+npm run lint      # check everything (no file changes)
+npm run format    # auto-fix formatting in place
 ```
 
-This runs `biome check .` which reports both lint violations and formatting issues without modifying files. The CI pipeline runs this on every push and pull request.
-
-### Auto-format files
-
-```bash
-npm run format
-```
-
-This runs `biome format --write .` and rewrites files in place to match the style rules.
-
-### Auto-fix lint issues
+To apply safe lint fixes as well:
 
 ```bash
 npx biome check --write .
 ```
-
-This applies safe lint fixes and formats at the same time.
 
 ### Configuration
 
@@ -82,9 +107,7 @@ Biome is configured in [`biome.json`](./biome.json). Key settings:
 
 ### IDE Integration
 
-Install the [Biome VS Code extension](https://marketplace.visualstudio.com/items?itemName=biomejs.biome) to get inline lint errors and format-on-save.
-
-Add this to your `.vscode/settings.json`:
+Install the [Biome VS Code extension](https://marketplace.visualstudio.com/items?itemName=biomejs.biome) and add this to `.vscode/settings.json`:
 
 ```json
 {
@@ -98,26 +121,35 @@ Add this to your `.vscode/settings.json`:
 
 ---
 
-## Deployment
-
-Deployments to GitHub Pages are manual:
-
-```bash
-npm run deploy
-```
-
-This builds the project and pushes the `dist/` folder to the `gh-pages` branch. The live site updates within a minute.
-
-The CI pipeline (`.github/workflows/build.yml`) runs lint + build checks on every push to `main` and on all pull requests, but does **not** auto-deploy.
-
----
-
 ## Project Structure
 
 ```
 src/
-├── applications/       # Each mini-app (self-contained)
-├── screens/            # Top-level page components
-├── main.tsx            # Router and app entry point
-└── index.css           # Tailwind directives
+├── apps/                   # Each mini-app (self-contained)
+│   ├── bang-duel-generator/
+│   │   ├── index.tsx       # App manifest — registers the app
+│   │   ├── assets/
+│   │   ├── components/
+│   │   └── screens/
+│   └── love-you/
+│       ├── index.tsx
+│       ├── components/
+│       └── screens/
+├── registry/
+│   ├── types.ts            # AppManifest interface
+│   └── apps.ts             # Central list — one import per app
+├── shared/
+│   ├── components/         # AppCard, AppLayout, Button, Input
+│   ├── context/            # AppMetaContext (favorites)
+│   └── hooks/              # useLocalStorage
+├── HomeScreen.tsx
+├── main.tsx                # Router — built from registry
+└── index.css               # Tailwind directives + base styles
 ```
+
+### Adding a new app
+
+1. Create `src/apps/[name]/index.tsx` and export an `AppManifest`
+2. Add one import line to `src/registry/apps.ts`
+
+The home screen and router update automatically — nothing else changes.
