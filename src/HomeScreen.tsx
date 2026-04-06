@@ -1,16 +1,13 @@
 import { appRegistry } from "@/registry/apps";
 import AppCard from "@/shared/components/AppCard";
 import { useAppMeta } from "@/shared/context/AppMetaContext";
-import React, { useState } from "react";
-
-type FilterMode = "all" | "favorites";
+import { useAppFilter } from "@/shared/hooks/useAppFilter";
+import React from "react";
 
 const HomeScreen: React.FC = () => {
   const { favorites } = useAppMeta();
-  const [filterMode, setFilterMode] = useState<FilterMode>("all");
-
-  const displayed =
-    filterMode === "favorites" ? appRegistry.filter((app) => favorites.has(app.id)) : appRegistry;
+  const { filterMode, setFilterMode, query, setQuery, selectedTags, toggleTag, filtered, allTags } =
+    useAppFilter(appRegistry, favorites);
 
   return (
     <div className="relative min-h-screen overflow-hidden bg-surface px-6 py-16 sm:px-12 lg:px-24">
@@ -28,7 +25,7 @@ const HomeScreen: React.FC = () => {
       </header>
 
       <section className="relative lg:pl-12">
-        <div className="mb-6 flex items-center gap-6">
+        <div className="mb-4 flex flex-wrap items-center gap-6">
           <button
             type="button"
             onClick={() => setFilterMode("all")}
@@ -56,15 +53,54 @@ const HomeScreen: React.FC = () => {
               </span>
             )}
           </button>
+
+          <div className="relative ml-auto">
+            <input
+              type="text"
+              placeholder="Search…"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              className="w-48 rounded-lg border border-outline-variant/15 bg-surface-container-lowest px-3 py-1.5 text-body-md text-on-surface placeholder:text-on-surface-variant/50 outline-none transition-shadow duration-150 focus:shadow-glow-primary sm:w-64"
+            />
+            {query && (
+              <button
+                type="button"
+                aria-label="Clear search"
+                onClick={() => setQuery("")}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-on-surface-variant hover:text-on-surface"
+              >
+                ×
+              </button>
+            )}
+          </div>
+        </div>
+
+        <div className="mb-6 flex flex-wrap gap-2">
+          {allTags.map((tag) => (
+            <button
+              key={tag}
+              type="button"
+              onClick={() => toggleTag(tag)}
+              className={`rounded-full px-3 py-0.5 text-label-sm uppercase tracking-widest transition-colors duration-150 ${
+                selectedTags.has(tag)
+                  ? "bg-primary/20 text-primary"
+                  : "bg-surface-container-highest text-on-surface-variant hover:text-on-surface"
+              }`}
+            >
+              {tag}
+            </button>
+          ))}
         </div>
 
         {filterMode === "favorites" && favorites.size === 0 ? (
           <p className="text-body-md text-on-surface-variant">
             No favorites yet — click the star on any card.
           </p>
+        ) : filtered.length === 0 ? (
+          <p className="text-body-md text-on-surface-variant">No apps match your search.</p>
         ) : (
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {displayed.map((app) => (
+            {filtered.map((app) => (
               <AppCard key={app.id} app={app} />
             ))}
           </div>
