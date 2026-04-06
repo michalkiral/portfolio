@@ -1,5 +1,5 @@
 import React from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 type AppLayoutProps = {
   title: string;
@@ -10,7 +10,7 @@ const AppLayout: React.FC<AppLayoutProps> = ({ title, children }) => {
   const navigate = useNavigate();
 
   return (
-    <div className="grid h-screen grid-rows-[auto_1fr] bg-surface text-on-surface">
+    <div className="grid h-full grid-rows-[auto_1fr] text-on-surface">
       <header className="sticky top-0 z-10 flex items-center gap-4 border-b border-outline-variant/15 bg-surface-container/60 px-6 py-3 backdrop-blur-md">
         <button
           type="button"
@@ -20,12 +20,6 @@ const AppLayout: React.FC<AppLayoutProps> = ({ title, children }) => {
           ← Back
         </button>
         <h1 className="text-headline-sm text-on-surface">{title}</h1>
-        <Link
-          to="/"
-          className="ml-auto text-label-md text-on-surface-variant transition-colors hover:text-on-surface"
-        >
-          Home
-        </Link>
       </header>
       <main className="overflow-auto">{children}</main>
     </div>
