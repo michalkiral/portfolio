@@ -4,6 +4,7 @@ import CoinFlip from "@/apps/randomizer/components/modes/CoinFlip";
 import DiceRoller from "@/apps/randomizer/components/modes/DiceRoller";
 import NumberGenerator from "@/apps/randomizer/components/modes/NumberGenerator";
 import OrderShuffle from "@/apps/randomizer/components/modes/OrderShuffle";
+import PairGenerator from "@/apps/randomizer/components/modes/PairGenerator";
 import SinglePick from "@/apps/randomizer/components/modes/SinglePick";
 import { useGroups } from "@/apps/randomizer/hooks/useGroups";
 import type { Mode } from "@/apps/randomizer/types";
@@ -91,11 +92,13 @@ const RandomizerScreen: React.FC = () => {
             {activeMode === "order-shuffle" && <OrderShuffle entries={activeGroup.entries} />}
             {activeMode === "single-pick" && <SinglePick entries={activeGroup.entries} />}
             {activeMode === "dice-roller" && <DiceRoller />}
+            {activeMode === "pair-generator" && <PairGenerator entries={activeGroup.entries} />}
             {activeMode !== "coin-flip" &&
               activeMode !== "number-generator" &&
               activeMode !== "order-shuffle" &&
               activeMode !== "single-pick" &&
-              activeMode !== "dice-roller" && (
+              activeMode !== "dice-roller" &&
+              activeMode !== "pair-generator" && (
                 <p className="text-body-md text-on-surface-variant">
                   {MODES.find((m) => m.id === activeMode)?.label} — coming soon.
                 </p>
