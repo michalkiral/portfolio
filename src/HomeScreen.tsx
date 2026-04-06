@@ -5,9 +5,12 @@ import { useAppFilter } from "@/shared/hooks/useAppFilter";
 import React from "react";
 
 const HomeScreen: React.FC = () => {
-  const { favorites } = useAppMeta();
-  const { filterMode, setFilterMode, query, setQuery, selectedTags, toggleTag, filtered, allTags } =
-    useAppFilter(appRegistry, favorites);
+  const { favorites, query } = useAppMeta();
+  const { filterMode, setFilterMode, selectedTags, toggleTag, filtered, allTags } = useAppFilter(
+    appRegistry,
+    favorites,
+    query,
+  );
 
   return (
     <div className="relative min-h-screen overflow-hidden bg-surface px-6 py-16 sm:px-12 lg:px-24">
@@ -18,8 +21,7 @@ const HomeScreen: React.FC = () => {
 
       <header className="relative mb-16 max-w-2xl">
         <p className="mb-3 text-label-md uppercase tracking-widest text-tertiary">Selected Work</p>
-        <h1 className="text-display-lg font-bold text-on-surface">The Lab.</h1>
-        <p className="mt-5 max-w-md text-body-md text-on-surface-variant">
+        <p className="max-w-md text-body-md text-on-surface-variant">
           A collection of experiments, tools, and things built for the fun of it.
         </p>
       </header>
@@ -53,26 +55,6 @@ const HomeScreen: React.FC = () => {
               </span>
             )}
           </button>
-
-          <div className="relative ml-auto">
-            <input
-              type="text"
-              placeholder="Search…"
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              className="w-48 rounded-lg border border-outline-variant/15 bg-surface-container-lowest px-3 py-1.5 text-body-md text-on-surface placeholder:text-on-surface-variant/50 outline-none transition-shadow duration-150 focus:shadow-glow-primary sm:w-64"
-            />
-            {query && (
-              <button
-                type="button"
-                aria-label="Clear search"
-                onClick={() => setQuery("")}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-on-surface-variant hover:text-on-surface"
-              >
-                ×
-              </button>
-            )}
-          </div>
         </div>
 
         <div className="mb-6 flex flex-wrap gap-2">

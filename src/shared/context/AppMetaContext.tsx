@@ -1,10 +1,12 @@
 import { useLocalStorage } from "@/shared/hooks/useLocalStorage";
-import React, { createContext, useContext, useMemo } from "react";
+import React, { createContext, useContext, useMemo, useState } from "react";
 
 interface AppMetaContextValue {
   favorites: Set<string>;
   toggleFavorite: (appId: string) => void;
   isFavorite: (appId: string) => boolean;
+  query: string;
+  setQuery: (q: string) => void;
 }
 
 const AppMetaContext = createContext<AppMetaContextValue | null>(null);
@@ -14,6 +16,7 @@ export const AppMetaProvider: React.FC<{ children: React.ReactNode }> = ({ child
     "portfolio:favorites",
     [],
   );
+  const [query, setQuery] = useState("");
 
   const favorites = useMemo(() => new Set(storedFavorites), [storedFavorites]);
 
@@ -26,7 +29,7 @@ export const AppMetaProvider: React.FC<{ children: React.ReactNode }> = ({ child
   const isFavorite = (appId: string) => favorites.has(appId);
 
   return (
-    <AppMetaContext.Provider value={{ favorites, toggleFavorite, isFavorite }}>
+    <AppMetaContext.Provider value={{ favorites, toggleFavorite, isFavorite, query, setQuery }}>
       {children}
     </AppMetaContext.Provider>
   );
