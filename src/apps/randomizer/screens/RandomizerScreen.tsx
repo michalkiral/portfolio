@@ -7,6 +7,7 @@ import OrderShuffle from "@/apps/randomizer/components/modes/OrderShuffle";
 import PairGenerator from "@/apps/randomizer/components/modes/PairGenerator";
 import SinglePick from "@/apps/randomizer/components/modes/SinglePick";
 import TeamGenerator from "@/apps/randomizer/components/modes/TeamGenerator";
+import WeightedPick from "@/apps/randomizer/components/modes/WeightedPick";
 import { useGroups } from "@/apps/randomizer/hooks/useGroups";
 import type { Mode } from "@/apps/randomizer/types";
 import AppLayout from "@/shared/components/AppLayout";
@@ -95,17 +96,9 @@ const RandomizerScreen: React.FC = () => {
             {activeMode === "dice-roller" && <DiceRoller />}
             {activeMode === "pair-generator" && <PairGenerator entries={activeGroup.entries} />}
             {activeMode === "team-generator" && <TeamGenerator entries={activeGroup.entries} />}
-            {activeMode !== "coin-flip" &&
-              activeMode !== "number-generator" &&
-              activeMode !== "order-shuffle" &&
-              activeMode !== "single-pick" &&
-              activeMode !== "dice-roller" &&
-              activeMode !== "pair-generator" &&
-              activeMode !== "team-generator" && (
-                <p className="text-body-md text-on-surface-variant">
-                  {MODES.find((m) => m.id === activeMode)?.label} — coming soon.
-                </p>
-              )}
+            {activeMode === "weighted-pick" && (
+              <WeightedPick entries={activeGroup.entries} onUpdate={updateEntry} />
+            )}
           </main>
         </div>
       </div>
