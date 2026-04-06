@@ -8,9 +8,18 @@ type FilterMode = "all" | "favorites";
 const HomeScreen: React.FC = () => {
   const { favorites } = useAppMeta();
   const [filterMode, setFilterMode] = useState<FilterMode>("all");
+  const [query, setQuery] = useState("");
 
-  const displayed =
-    filterMode === "favorites" ? appRegistry.filter((app) => favorites.has(app.id)) : appRegistry;
+  const displayed = appRegistry.filter((app) => {
+    if (filterMode === "favorites" && !favorites.has(app.id)) return false;
+    if (query) {
+      const q = query.toLowerCase();
+      const matchesTitle = app.title.toLowerCase().includes(q);
+      const matchesTag = app.tags.some((tag) => tag.toLowerCase().includes(q));
+      if (!matchesTitle && !matchesTag) return false;
+    }
+    return true;
+  });
 
   return (
     <div className="relative min-h-screen overflow-hidden bg-surface px-6 py-16 sm:px-12 lg:px-24">
@@ -28,7 +37,7 @@ const HomeScreen: React.FC = () => {
       </header>
 
       <section className="relative lg:pl-12">
-        <div className="mb-6 flex items-center gap-6">
+        <div className="mb-6 flex flex-wrap items-center gap-6">
           <button
             type="button"
             onClick={() => setFilterMode("all")}
@@ -56,12 +65,34 @@ const HomeScreen: React.FC = () => {
               </span>
             )}
           </button>
+
+          <div className="relative ml-auto">
+            <input
+              type="text"
+              placeholder="Search…"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              className="w-48 rounded-lg border border-outline-variant/15 bg-surface-container-lowest px-3 py-1.5 text-body-md text-on-surface placeholder:text-on-surface-variant/50 outline-none transition-shadow duration-150 focus:shadow-glow-primary sm:w-64"
+            />
+            {query && (
+              <button
+                type="button"
+                aria-label="Clear search"
+                onClick={() => setQuery("")}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-on-surface-variant hover:text-on-surface"
+              >
+                ×
+              </button>
+            )}
+          </div>
         </div>
 
         {filterMode === "favorites" && favorites.size === 0 ? (
           <p className="text-body-md text-on-surface-variant">
             No favorites yet — click the star on any card.
           </p>
+        ) : displayed.length === 0 ? (
+          <p className="text-body-md text-on-surface-variant">No apps match your search.</p>
         ) : (
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {displayed.map((app) => (
