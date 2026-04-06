@@ -1,8 +1,17 @@
 import { appRegistry } from "@/registry/apps";
 import AppCard from "@/shared/components/AppCard";
-import React from "react";
+import { useAppMeta } from "@/shared/context/AppMetaContext";
+import React, { useState } from "react";
+
+type FilterMode = "all" | "favorites";
 
 const HomeScreen: React.FC = () => {
+  const { favorites } = useAppMeta();
+  const [filterMode, setFilterMode] = useState<FilterMode>("all");
+
+  const displayed =
+    filterMode === "favorites" ? appRegistry.filter((app) => favorites.has(app.id)) : appRegistry;
+
   return (
     <div className="relative min-h-screen overflow-hidden bg-surface px-6 py-16 sm:px-12 lg:px-24">
       <div
@@ -19,14 +28,47 @@ const HomeScreen: React.FC = () => {
       </header>
 
       <section className="relative lg:pl-12">
-        <p className="mb-6 text-label-md uppercase tracking-widest text-on-surface-variant">
-          Projects
-        </p>
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {appRegistry.map((app) => (
-            <AppCard key={app.id} app={app} />
-          ))}
+        <div className="mb-6 flex items-center gap-6">
+          <button
+            type="button"
+            onClick={() => setFilterMode("all")}
+            className={`text-label-md uppercase tracking-widest transition-colors duration-150 ${
+              filterMode === "all"
+                ? "text-on-surface"
+                : "text-on-surface-variant hover:text-on-surface"
+            }`}
+          >
+            All
+          </button>
+          <button
+            type="button"
+            onClick={() => setFilterMode("favorites")}
+            className={`flex items-center gap-2 text-label-md uppercase tracking-widest transition-colors duration-150 ${
+              filterMode === "favorites"
+                ? "text-on-surface"
+                : "text-on-surface-variant hover:text-on-surface"
+            }`}
+          >
+            Favorites
+            {favorites.size > 0 && (
+              <span className="rounded-full bg-surface-container-highest px-2 py-0.5 text-label-sm text-tertiary">
+                {favorites.size}
+              </span>
+            )}
+          </button>
         </div>
+
+        {filterMode === "favorites" && favorites.size === 0 ? (
+          <p className="text-body-md text-on-surface-variant">
+            No favorites yet — click the star on any card.
+          </p>
+        ) : (
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {displayed.map((app) => (
+              <AppCard key={app.id} app={app} />
+            ))}
+          </div>
+        )}
       </section>
     </div>
   );
