@@ -5,9 +5,12 @@ import { useAppFilter } from "@/shared/hooks/useAppFilter";
 import React from "react";
 
 const HomeScreen: React.FC = () => {
-  const { favorites } = useAppMeta();
-  const { filterMode, setFilterMode, query, setQuery, selectedTags, toggleTag, filtered, allTags } =
-    useAppFilter(appRegistry, favorites);
+  const { favorites, query } = useAppMeta();
+  const { filterMode, setFilterMode, selectedTags, toggleTag, filtered, allTags } = useAppFilter(
+    appRegistry,
+    favorites,
+    query,
+  );
 
   return (
     <div className="relative min-h-screen overflow-hidden bg-surface px-6 py-16 sm:px-12 lg:px-24">
@@ -52,26 +55,6 @@ const HomeScreen: React.FC = () => {
               </span>
             )}
           </button>
-
-          <div className="relative ml-auto">
-            <input
-              type="text"
-              placeholder="Search…"
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              className="w-48 rounded-lg border border-outline-variant/15 bg-surface-container-lowest px-3 py-1.5 text-body-md text-on-surface placeholder:text-on-surface-variant/50 outline-none transition-shadow duration-150 focus:shadow-glow-primary sm:w-64"
-            />
-            {query && (
-              <button
-                type="button"
-                aria-label="Clear search"
-                onClick={() => setQuery("")}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-on-surface-variant hover:text-on-surface"
-              >
-                ×
-              </button>
-            )}
-          </div>
         </div>
 
         <div className="mb-6 flex flex-wrap gap-2">

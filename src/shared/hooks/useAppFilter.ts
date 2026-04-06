@@ -1,9 +1,8 @@
 import type { AppManifest } from "@/registry/types";
 import { useState } from "react";
 
-export function useAppFilter(apps: AppManifest[], favorites: Set<string>) {
+export function useAppFilter(apps: AppManifest[], favorites: Set<string>, query: string) {
   const [filterMode, setFilterMode] = useState<"all" | "favorites">("all");
-  const [query, setQuery] = useState("");
   const [selectedTags, setSelectedTags] = useState<Set<string>>(new Set());
 
   const allTags = [...new Set(apps.flatMap((app) => app.tags))].sort();
@@ -28,5 +27,5 @@ export function useAppFilter(apps: AppManifest[], favorites: Set<string>) {
     return true;
   });
 
-  return { filterMode, setFilterMode, query, setQuery, selectedTags, toggleTag, filtered, allTags };
+  return { filterMode, setFilterMode, selectedTags, toggleTag, filtered, allTags };
 }
